@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101512">
+  <title>Apex Circuit | Controller HP</title>
+  <link rel="icon" href="./assets/flag.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/controller.css">
+  <script type="module" src="./js/controller.js"></script>
+</head>
+<body>
+  <main class="handset">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Apex Circuit, layar balapan">
+        <span class="brand-mark" aria-hidden="true">◢</span>
+        <span>APEX <b>CIRCUIT</b><small>CONTROLLER HP</small></span>
+      </a>
+      <span class="status-chip" id="connection" data-state="local">PIT LANE</span>
+    </header>
+    <section id="join-panel" class="join-panel">
+      <div class="eyebrow">01 / MASUK LOBBY</div>
+      <h1>Ambil<br>kendali<span>.</span></h1>
+      <p>Masuk dengan kode di layar videotron. HP ini akan menjadi setir dan pedal mobilmu.</p>
+      <form id="join-form">
+        <label for="code">KODE LOBBY</label>
+        <input id="code" name="room" type="text" maxlength="14" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCDE–23456" required>
+        <label for="name">NAMA PEMBALAP</label>
+        <input id="name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="Nama di layar" required>
+        <button id="join" type="submit" class="button primary wide">Gabung balapan <b aria-hidden="true">↗</b></button>
+        <p id="join-error" class="message error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="drive-panel" class="drive-panel" hidden>
+      <div class="driver">
+        <div class="driver-plate" id="driver-number" aria-hidden="true">01</div>
+        <div><div id="active-room" class="eyebrow"></div><h1 id="driver-name"></h1></div>
+      </div>
+      <div class="drive-status" id="drive-status" aria-live="polite"></div>
+      <div class="steer-header">
+        <div class="eyebrow">SETIR</div>
+        <div class="switch" aria-label="Mode setir">
+          <button type="button" id="touch" aria-pressed="true">Sentuh</button>
+          <button type="button" id="tilt" aria-pressed="false">Tilt</button>
+        </div>
+      </div>
+      <div class="wheel" id="wheel" aria-hidden="true"><span>◢</span></div>
+      <p id="mode-note" class="hint mode-note" aria-live="polite">Tahan tombol panah untuk belok.</p>
+      <div class="control-row" id="touch-row">
+        <button type="button" class="drive-button arrow" id="left" aria-label="Belok kiri">←</button>
+        <button type="button" class="drive-button arrow" id="right" aria-label="Belok kanan">→</button>
+      </div>
+      <button type="button" class="button ghost wide" id="calibrate" hidden>Kalibrasi posisi tengah</button>
+      <div class="control-row pedals">
+        <button type="button" class="drive-button brake" id="brake">REM</button>
+        <button type="button" class="drive-button gas" id="gas">GAS</button>
+      </div>
+      <p id="drive-error" class="message error" role="alert"></p>
+      <button type="button" class="text-link leave" id="leave">Keluar lobby</button>
+    </section>
+    <footer class="footer"><span>APEX CIRCUIT</span><span>LIHAT BALAPAN DI LAYAR BESAR</span></footer>
+  </main>
+</body>
+</html>

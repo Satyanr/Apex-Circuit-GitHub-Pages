@@ -1,0 +1,46 @@
+.handset { max-width: 490px; margin: auto; padding: env(safe-area-inset-top) max(15px, env(safe-area-inset-right)) max(13px, env(safe-area-inset-bottom)) max(15px, env(safe-area-inset-left)); }
+.join-panel { padding: 30px 0 18px; }
+.join-panel h1 { margin: 10px 0 13px; font-size: clamp(3.4rem, 12vw, 5rem); font-weight: 950; line-height: .85; letter-spacing: -.07em; }
+.join-panel h1 span { color: var(--accent); }
+.join-panel > p { max-width: 33ch; line-height: 1.55; color: var(--muted); }
+form { display: grid; margin-top: 22px; gap: 7px; }
+label { margin-top: 3px; color: var(--muted); font: 800 .72rem var(--mono); letter-spacing: .09em; }
+input { width: 100%; min-height: 50px; padding: 9px 12px; border: 1px solid #526250; border-radius: 7px; color: var(--text); background: #202920; font-size: 1rem; }
+#code { font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; }
+form .button { margin-top: 9px; min-height: 51px; }
+.drive-panel { display: grid; gap: 8px; margin-top: 12px; --driver-color: var(--accent); }
+.driver { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.driver > :last-child { min-width: 0; }
+.driver-plate { display: grid; place-items: center; flex: 0 0 43px; height: 43px; border-radius: 7px; background: var(--driver-color); color: #15190b; font: 900 1.16rem var(--mono); }
+.driver h1 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(1.45rem, 6vw, 2rem); line-height: 1.05; letter-spacing: -.055em; }
+.driver .eyebrow { color: var(--muted); letter-spacing: .07em; }
+.drive-status { display: grid; align-content: center; min-height: 38px; padding: 6px 10px; border: 1px solid #526250; border-radius: 6px; background: #222d21; color: var(--driver-color); font-weight: 810; }
+.steer-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.switch { display: inline-flex; gap: 2px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); padding: 3px; }
+.switch button { min-width: 66px; min-height: 34px; padding: 5px 8px; border: 0; border-radius: 4px; background: none; color: var(--muted); font-weight: 750; font-size: .82rem; }
+.switch [aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.wheel {
+  display: grid; place-items: center; width: 63px; height: 63px; margin: 0 auto; transform: rotate(var(--steer, 0deg));
+  border-radius: 50%; border: 7px solid #53654f; border-top-color: var(--driver-color); background: #242d24;
+  color: var(--driver-color); font-size: 1.4rem; font-weight: 900;
+}
+.mode-note { min-height: 1.45em; text-align: center; }
+.control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pedals { grid-template-columns: 2fr 3fr; }
+.drive-button {
+  min-width: 0; min-height: 62px; border: 1px solid #566751; border-radius: 8px;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  color: var(--text); background: #293529; font: 900 1.16rem var(--mono); letter-spacing: .1em;
+}
+.drive-button.arrow { min-height: 52px; font-size: 1.8rem; line-height: 1; }
+.drive-button.gas { border-color: #b6d740; background: var(--accent); color: #17200e; }
+.drive-button.brake { border-color: #c37f6e; background: #743d34; color: #fff1eb; }
+.drive-button[data-pressed="true"] { filter: brightness(1.22); box-shadow: inset 0 0 0 3px currentColor; }
+.leave { justify-self: center; min-height: 37px; color: var(--muted); }
+@media (max-height: 560px) and (orientation: landscape) {
+  .handset { max-width: 730px; }
+  .topbar { min-height: 49px; }
+  .drive-panel { grid-template-columns: 1fr 1fr; }
+  .driver, .drive-status, .pedals, .leave, .drive-panel > .message { grid-column: span 2; }
+  .steer-header, .wheel, .mode-note, #calibrate, #touch-row { align-self: center; }
+}

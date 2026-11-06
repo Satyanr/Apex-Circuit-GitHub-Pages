@@ -1,0 +1,93 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "races": {
+      "$code": {
+        ".read": "auth !== null && (data.child('meta/host').val() === auth.uid || ((now < data.child('meta/createdAt').val() + 14400000) && (data.child('seats/s0/member/uid').val() === auth.uid || data.child('seats/s1/member/uid').val() === auth.uid || data.child('seats/s2/member/uid').val() === auth.uid || data.child('seats/s3/member/uid').val() === auth.uid)))",
+        ".write": "auth !== null && ((!data.exists() && $code.matches(/^[A-HJ-NP-Z2-9]{10}$/) && newData.child('meta/host').val() === auth.uid && !newData.child('seats').exists()) || (data.child('meta/host').val() === auth.uid && !newData.exists()))",
+        ".validate": "newData.hasChildren(['meta']) && newData.getPriority() === null",
+        "meta": {
+          ".write": "auth !== null && data.child('host').val() === auth.uid && newData.exists() && now < data.child('createdAt').val() + 14400000",
+          ".validate": "newData.hasChildren(['host', 'createdAt', 'status', 'round', 'startsAt', 'endsAt']) && newData.getPriority() === null && ((!data.exists() && newData.child('status').val() === 'lobby' && newData.child('round').val() === 0) || (data.child('status').val() === 'lobby' && newData.child('status').val() === 'racing' && newData.child('round').val() === data.child('round').val() + 1 && newData.child('startsAt').val() >= now && newData.child('startsAt').val() <= now + 8000 && newData.child('endsAt').val() === newData.child('startsAt').val() + 90000 && newData.parent().child('seats').hasChildren()) || (data.child('status').val() === 'racing' && newData.child('status').val() === 'finished' && now >= data.child('startsAt').val() && newData.child('round').val() === data.child('round').val() && newData.child('startsAt').val() === data.child('startsAt').val() && newData.child('endsAt').val() === data.child('endsAt').val()) || ((data.child('status').val() === 'racing' || data.child('status').val() === 'finished') && newData.child('status').val() === 'lobby' && newData.child('round').val() === data.child('round').val())) && (newData.child('status').val() !== 'lobby' || (newData.child('startsAt').val() === 0 && newData.child('endsAt').val() === 0)) && (newData.child('status').val() === 'finished' ? newData.hasChildren(['winner', 'times']) && (newData.child('winner').val() === -1 ? (!(newData.child('times/s0').val() > 0) && !(newData.child('times/s1').val() > 0) && !(newData.child('times/s2').val() > 0) && !(newData.child('times/s3').val() > 0)) : newData.child('times').child('s' + newData.child('winner').val()).val() > 0) && newData.child('times/s0').exists() === newData.parent().child('seats/s0/member').exists() && newData.child('times/s1').exists() === newData.parent().child('seats/s1/member').exists() && newData.child('times/s2').exists() === newData.parent().child('seats/s2/member').exists() && newData.child('times/s3').exists() === newData.parent().child('seats/s3/member').exists() : !newData.child('winner').exists() && !newData.child('times').exists())",
+          "host": {
+            ".validate": "newData.isString() && (data.exists() ? newData.val() === data.val() : newData.val() === auth.uid)"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && (data.exists() ? newData.val() === data.val() : newData.val() <= now && newData.val() >= now - 10000)"
+          },
+          "status": {
+            ".validate": "newData.val() === 'lobby' || newData.val() === 'racing' || newData.val() === 'finished'"
+          },
+          "round": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9999 && newData.val() % 1 === 0"
+          },
+          "startsAt": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() % 1 === 0"
+          },
+          "endsAt": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() % 1 === 0"
+          },
+          "winner": {
+            ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 3 && newData.val() % 1 === 0"
+          },
+          "times": {
+            "$resultSeat": {
+              ".validate": "($resultSeat === 's0' || $resultSeat === 's1' || $resultSeat === 's2' || $resultSeat === 's3') && newData.isNumber() && newData.val() >= 0 && newData.val() <= 90000 && newData.val() % 1 === 0"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "seats": {
+          "$slot": {
+            ".write": "auth !== null && !newData.exists() && data.exists() && data.parent().parent().child('meta/status').val() === 'lobby' && newData.parent().parent().child('meta/status').val() === 'lobby' && (data.child('member/uid').val() === auth.uid || data.parent().parent().child('meta/host').val() === auth.uid)",
+            ".validate": "($slot === 's0' || $slot === 's1' || $slot === 's2' || $slot === 's3') && newData.hasChildren(['member']) && newData.getPriority() === null",
+            "member": {
+              ".write": "auth !== null && !data.exists() && newData.child('uid').val() === auth.uid && data.parent().parent().parent().child('meta/status').val() === 'lobby' && newData.parent().parent().parent().child('meta/status').val() === 'lobby' && now < data.parent().parent().parent().child('meta/createdAt').val() + 14400000 && data.parent().parent().parent().child('meta/host').val() !== auth.uid && ($slot === 's0' || newData.parent().parent().child('s0/member/uid').val() !== auth.uid) && ($slot === 's1' || newData.parent().parent().child('s1/member/uid').val() !== auth.uid) && ($slot === 's2' || newData.parent().parent().child('s2/member/uid').val() !== auth.uid) && ($slot === 's3' || newData.parent().parent().child('s3/member/uid').val() !== auth.uid)",
+              ".validate": "newData.hasChildren(['uid', 'name']) && newData.getPriority() === null",
+              "uid": {
+                ".validate": "newData.isString() && newData.val() === auth.uid"
+              },
+              "name": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20"
+              },
+              "$other": {
+                ".validate": false
+              }
+            },
+            "input": {
+              ".write": "auth !== null && data.parent().child('member/uid').val() === auth.uid && newData.exists() && now < root.child('races').child($code).child('meta/createdAt').val() + 14400000 && (root.child('races').child($code).child('meta/status').val() === 'lobby' || root.child('races').child($code).child('meta/status').val() === 'racing') && (!data.exists() || newData.child('at').val() >= data.child('at').val() + 25)",
+              ".validate": "newData.hasChildren(['steer', 'gas', 'brake', 'at', 'round']) && newData.getPriority() === null",
+              "steer": {
+                ".validate": "newData.isNumber() && newData.val() >= -1 && newData.val() <= 1"
+              },
+              "gas": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+              },
+              "brake": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+              },
+              "at": {
+                ".validate": "newData.isNumber() && newData.val() <= now && newData.val() >= now - 2000 && newData.val() % 1 === 0"
+              },
+              "round": {
+                ".validate": "newData.isNumber() && newData.val() === root.child('races').child($code).child('meta/round').val()"
+              },
+              "$other": {
+                ".validate": false
+              }
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}

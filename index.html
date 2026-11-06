@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101512">
+  <meta name="description" content="Balap top-down empat pemain dengan HP sebagai controller.">
+  <title>Apex Circuit | Layar Balapan</title>
+  <link rel="icon" href="./assets/flag.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/host.css">
+  <script type="module" src="./js/host.js"></script>
+</head>
+<body>
+  <main class="broadcast">
+    <header class="topbar">
+      <a class="brand" href="./index.html" aria-label="Apex Circuit">
+        <span class="brand-mark" aria-hidden="true">◢</span>
+        <span>APEX <b>CIRCUIT</b><small>ARENA BALAP</small></span>
+      </a>
+      <div class="top-actions">
+        <span id="connection" class="status-chip" data-state="local">LAYAR HOST</span>
+        <button type="button" class="button ghost compact" id="fullscreen" aria-label="Layar penuh">⛶ <span>Layar penuh</span></button>
+      </div>
+    </header>
+
+    <div class="race-header">
+      <div><div class="eyebrow">SIRKUIT 01</div><h1>Neon Loop</h1></div>
+      <div class="race-metrics">
+        <div><span>PUTARAN</span><strong id="laps">3</strong></div>
+        <div><span id="clock-label">BATAS WAKTU</span><strong id="clock">01:30</strong></div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <section class="track-frame" aria-label="Lintasan Neon Loop">
+        <canvas id="track" width="1200" height="675" aria-label="Peta sirkuit dan posisi mobil">Peta sirkuit balap.</canvas>
+        <div class="track-tag"><i></i><span id="track-mode">STANDBY</span></div>
+        <div class="intro" id="intro">
+          <div class="intro-inner">
+            <div class="eyebrow">01 / MULTIPLAYER ARCADE</div>
+            <h2>Masuk<br>lintasan<span>.</span></h2>
+            <p>Empat pembalap, satu layar. Scan QR dengan HP dan langsung pegang kendali.</p>
+            <div class="intro-actions">
+              <button type="button" id="create" class="button primary">Buat lobby <b aria-hidden="true">↗</b></button>
+              <button type="button" id="practice" class="button ghost">Coba latihan</button>
+            </div>
+            <p class="hint">Latihan offline melawan 3 bot • WASD atau tombol panah</p>
+            <p id="home-error" class="message error" role="alert"></p>
+          </div>
+        </div>
+        <div class="lobby-display" id="lobby-display" hidden>
+          <div id="qr" class="qr" role="img" aria-label="QR undangan lobby"></div>
+          <div class="lobby-label">
+            <span class="eyebrow">SCAN DENGAN KAMERA HP</span>
+            <h2>Gabung grid.</h2>
+            <strong class="room-code" id="room-code"></strong>
+            <p class="hint">Masukkan nama pembalap di HP.</p>
+          </div>
+        </div>
+        <div class="race-signal" id="race-signal" aria-hidden="true" hidden><span id="signal-label"></span><b id="signal-number"></b></div>
+        <div class="podium" id="podium" hidden>
+          <div class="eyebrow" id="result-kicker">HASIL BALAPAN</div>
+          <h2 id="result-title"></h2>
+          <ol id="result-list"></ol>
+          <button type="button" class="button primary" id="rematch">Balapan lagi <b aria-hidden="true">↗</b></button>
+        </div>
+      </section>
+
+      <aside class="tower" aria-label="Pemain dan lobby">
+        <div class="tower-head">
+          <div><div class="eyebrow">PIT WALL</div><h2 id="tower-title">Grid pembalap</h2></div>
+          <span id="seat-count" class="counter">0/4</span>
+        </div>
+        <ol id="roster" class="roster"></ol>
+
+        <div class="pit-panel" id="pit-idle">
+          <span class="eyebrow">FORMAT BALAP</span>
+          <p><strong>3</strong> putaran <span aria-hidden="true">/</span> <strong>90</strong> detik</p>
+          <p class="hint">Peringkat ditentukan oleh waktu finis.</p>
+          <a href="./controller.html" class="text-link">Buka controller HP ↗</a>
+        </div>
+
+        <div class="pit-panel" id="pit-online" hidden>
+          <button class="text-link" type="button" id="copy">Salin link ↗</button>
+          <p id="pit-note" class="hint" aria-live="polite"></p>
+          <button type="button" class="button primary wide" id="start">Mulai balapan <b aria-hidden="true">↗</b></button>
+          <button type="button" class="button ghost wide" id="close">Tutup lobby</button>
+        </div>
+
+        <div class="pit-panel" id="pit-demo" hidden>
+          <span class="eyebrow">MODE LATIHAN</span>
+          <p class="key-guide"><kbd>W</kbd><kbd>↑</kbd> Gas <kbd>S</kbd><kbd>↓</kbd> Rem<br><kbd>A</kbd><kbd>D</kbd><kbd>←</kbd><kbd>→</kbd> Belok</p>
+          <button type="button" class="button ghost wide" id="exit-demo">Keluar latihan</button>
+        </div>
+        <p id="host-error" class="message error" role="alert"></p>
+      </aside>
+    </div>
+    <footer class="footer"><span>APEX CIRCUIT / NEON LOOP</span><span id="footer-status">BUAT LOBBY ATAU COBA LATIHAN</span></footer>
+  </main>
+</body>
+</html>
