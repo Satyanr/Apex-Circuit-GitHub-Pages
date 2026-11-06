@@ -7,8 +7,8 @@
   <title>Apex Circuit | Controller HP</title>
   <link rel="icon" href="./assets/flag.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./css/base.css">
-  <link rel="stylesheet" href="./css/controller.css">
-  <script type="module" src="./js/controller.js"></script>
+  <link rel="stylesheet" href="./css/controller.css?v=3">
+  <script type="module" src="./js/controller.js?v=3"></script>
 </head>
 <body>
   <main class="handset">
@@ -28,7 +28,8 @@
         <input id="code" name="room" type="text" maxlength="14" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCDE–23456" required>
         <label for="name">NAMA PEMBALAP</label>
         <input id="name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="Nama di layar" required>
-        <button id="join" type="submit" class="button primary wide">Gabung balapan <b aria-hidden="true">↗</b></button>
+        <button id="join" type="submit" class="button primary wide" disabled>Gabung balapan <b aria-hidden="true">↗</b></button>
+        <p id="join-loading" class="hint" role="status">Memuat controller. Jika tombol tetap abu-abu, muat ulang halaman ini.</p>
         <p id="join-error" class="message error" role="alert"></p>
       </form>
     </section>

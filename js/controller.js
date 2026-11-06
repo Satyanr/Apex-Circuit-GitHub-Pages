@@ -332,6 +332,8 @@ setInterval(updateController, 67);
 const invitedCode = normalizeCode(query.get('room') || '');
 const saved = readSession(sessionKey);
 if (validCode(invitedCode)) ui.code.value = displayCode(invitedCode);
+if (ui['join-loading']) ui['join-loading'].hidden = true;
+ui.join.disabled = false;
 if (saved && (!invitedCode || invitedCode === saved.code)) {
   ui.code.value = displayCode(saved.code);
   ui.name.value = saved.name;

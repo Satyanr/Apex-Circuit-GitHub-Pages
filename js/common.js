@@ -31,10 +31,11 @@ export function cleanName(value) {
   return value.trim().replace(/\s+/g, ' ').slice(0, 20);
 }
 
-export function controllerURL(code) {
-  const url = new URL('./controller.html', location.href);
+export function controllerURL(code, page = location.href) {
+  const url = new URL('./controller.html', page);
   url.searchParams.set('room', code);
-  if (new URLSearchParams(location.search).get('emulator') === '1') {
+  url.searchParams.set('v', '3');
+  if (new URL(page).searchParams.get('emulator') === '1') {
     url.searchParams.set('emulator', '1');
   }
   return url.href;

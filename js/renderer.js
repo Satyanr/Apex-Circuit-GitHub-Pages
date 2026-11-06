@@ -1,5 +1,5 @@
 import { SEATS, COLORS } from './common.js';
-import { TRACK, WORLD, trackAt } from './physics.js';
+import { TRACK, WORLD, trackAt } from './physics.js?v=3';
 
 const TAU = Math.PI * 2;
 

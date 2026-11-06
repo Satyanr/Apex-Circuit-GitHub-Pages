@@ -2,8 +2,8 @@ import {
   SEATS, COLORS, LAP_COUNT, COUNTDOWN_MS, RACE_MS, ROOM_MS, PRESENCE_MS, NEUTRAL,
   DRIVE_KEYS, holdKeys, keyboardDrive, controllerURL, displayCode, readSession,
   writeSession, showError, freshInput, racePhase, resultLabel, timeLabel
-} from './common.js';
-import { createRace, raceResult, standings, stepRace } from './physics.js';
+} from './common.js?v=3';
+import { createRace, raceResult, standings, stepRace } from './physics.js?v=3';
 import { makeRenderer } from './renderer.js';
 import { createRoom, firebaseClient, roomPath } from './firebase.js';
 import qrcode from '../vendor/qrcode.js';

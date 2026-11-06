@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   LAP_COUNT, SEATS, NEUTRAL, createCode, displayCode, normalizeCode, validCode,
-  cleanName, freshInput, racePhase
+  cleanName, freshInput, racePhase, controllerURL
 } from '../js/common.js';
 import { createRace, stepRace, raceResult, TRACK, trackAt, nearestTrack } from '../js/physics.js';
 import { joinRoom } from '../js/firebase.js';
@@ -15,6 +15,17 @@ test('kode undangan bisa disalin dari layar dan spasi nama dirapikan', () => {
   }
   assert.equal(cleanName('  Gema   Merah  '), 'Gema Merah');
   assert.equal(cleanName('a'.repeat(50)).length, 20);
+});
+
+test('undangan membawa kode dan versi controller pada subfolder GitHub Pages', () => {
+  const page = 'https://contoh.github.io/apex-circuit/index.html?campaign=1';
+  const link = new URL(controllerURL('ABCDE23456', page));
+  assert.equal(link.pathname, '/apex-circuit/controller.html');
+  assert.equal(link.searchParams.get('room'), 'ABCDE23456');
+  assert.equal(link.searchParams.get('v'), '3');
+  assert.equal(link.searchParams.has('campaign'), false);
+  const local = new URL(controllerURL('ABCDE23456', 'http://localhost:8080/?emulator=1'));
+  assert.equal(local.searchParams.get('emulator'), '1');
 });
 
 test('hanya input segar dari ronde aktif yang diterima simulasi', () => {
