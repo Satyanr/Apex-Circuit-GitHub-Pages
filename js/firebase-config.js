@@ -1,8 +1,8 @@
 // Ganti nilai di bawah dengan konfigurasi aplikasi Web dari Firebase Console.
 export const firebaseConfig = {
-  apiKey: 'ISI_API_KEY',
-  authDomain: 'ISI_PROJECT_ID.firebaseapp.com',
-  databaseURL: 'ISI_URL_REALTIME_DATABASE',
-  projectId: 'ISI_PROJECT_ID',
-  appId: 'ISI_APP_ID'
+  apiKey: 'AIzaSyBTFIfon0ufF7P5KUNJFHYJSSWcnt5-p9A',
+  authDomain: 'apex-circuit-a48f9.firebaseapp.com',
+  databaseURL: 'https://apex-circuit-a48f9-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  projectId: 'apex-circuit-a48f9',
+  appId: '1:854255398420:web:19eda28318d2b37e8d8101'
 };
