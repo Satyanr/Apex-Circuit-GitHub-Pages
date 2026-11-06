@@ -40,23 +40,32 @@
       </div>
       <div class="drive-status" id="drive-status" aria-live="polite"></div>
       <div class="steer-header">
-        <div class="eyebrow">SETIR</div>
+        <div class="eyebrow">MODE SETIR</div>
         <div class="switch" aria-label="Mode setir">
           <button type="button" id="touch" aria-pressed="true">Sentuh</button>
           <button type="button" id="tilt" aria-pressed="false">Tilt</button>
         </div>
       </div>
-      <div class="wheel" id="wheel" aria-hidden="true"><span>◢</span></div>
-      <p id="mode-note" class="hint mode-note" aria-live="polite">Tahan tombol panah untuk belok.</p>
-      <div class="control-row" id="touch-row">
-        <button type="button" class="drive-button arrow" id="left" aria-label="Belok kiri">←</button>
-        <button type="button" class="drive-button arrow" id="right" aria-label="Belok kanan">→</button>
+      <div class="drive-deck">
+        <div class="steering">
+          <div class="eyebrow">SETIR</div>
+          <div class="joystick" id="joystick" role="group" aria-label="Joystick analog kiri dan kanan">
+            <span class="stick-arrow" aria-hidden="true">‹</span>
+            <span class="stick-arrow" aria-hidden="true">›</span>
+            <span class="stick-knob" aria-hidden="true">◢</span>
+          </div>
+          <div class="tilt-controls" id="tilt-controls" hidden>
+            <div class="wheel" id="wheel" aria-hidden="true"><span>◢</span></div>
+            <button type="button" class="button ghost compact" id="calibrate" hidden>Kalibrasi setir</button>
+          </div>
+        </div>
+        <div class="pedals" role="group" aria-label="Pedal">
+          <div class="eyebrow">PEDAL</div>
+          <button type="button" class="drive-button gas" id="gas">GAS</button>
+          <button type="button" class="drive-button brake" id="brake">REM / MUNDUR</button>
+        </div>
       </div>
-      <button type="button" class="button ghost wide" id="calibrate" hidden>Kalibrasi posisi tengah</button>
-      <div class="control-row pedals">
-        <button type="button" class="drive-button brake" id="brake">REM</button>
-        <button type="button" class="drive-button gas" id="gas">GAS</button>
-      </div>
+      <p id="mode-note" class="hint mode-note" aria-live="polite">Geser joystick untuk belok. Tahan rem sampai mobil berhenti untuk mundur.</p>
       <p id="drive-error" class="message error" role="alert"></p>
       <button type="button" class="text-link leave" id="leave">Keluar lobby</button>
     </section>

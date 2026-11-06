@@ -99,11 +99,25 @@ export function botInput(car) {
 }
 
 function move(car, input, dt) {
-  car.heading = angleDelta(car.heading + input.steer * (2.25 + car.speed * 0.0037) *
-    Math.min(1, car.speed / 45) * dt, 0);
-  const drag = car.offroad ? 105 + car.speed * 0.88 : 28 + car.speed * 0.18;
-  car.speed = clamp(car.speed + (input.gas * 290 - input.brake * 485 - drag) * dt,
-    0, car.offroad ? 175 : 385);
+  const speed = Math.abs(car.speed);
+  const direction = Math.sign(car.speed);
+  const turn = input.steer * (2.25 + speed * 0.0037) * Math.min(1, speed / 45);
+  car.heading = angleDelta(car.heading + turn * direction * dt, 0);
+  const drag = car.offroad ? 105 + speed * 0.88 : 28 + speed * 0.18;
+
+  // Pedal changes must pass through a full stop before changing direction.
+  if (input.brake > 0) {
+    car.speed = car.speed > 0
+      ? Math.max(0, car.speed - (input.brake * 485 + drag) * dt)
+      : Math.min(0, car.speed - (input.brake * 210 - drag) * dt);
+  } else if (input.gas > 0) {
+    car.speed = car.speed < 0
+      ? Math.min(0, car.speed + (input.gas * 290 + drag) * dt)
+      : Math.max(0, car.speed + (input.gas * 290 - drag) * dt);
+  } else {
+    car.speed = direction * Math.max(0, speed - drag * dt);
+  }
+  car.speed = clamp(car.speed, car.offroad ? -85 : -125, car.offroad ? 175 : 385);
   car.x += Math.cos(car.heading) * car.speed * dt;
   car.y += Math.sin(car.heading) * car.speed * dt;
 }

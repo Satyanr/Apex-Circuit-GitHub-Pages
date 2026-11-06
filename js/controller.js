@@ -8,11 +8,14 @@ const ui = Object.fromEntries([...document.querySelectorAll('[id]')].map(node =>
 const query = new URLSearchParams(location.search);
 const sessionKey = 'apex-controller:' + (query.get('emulator') === '1' ? 'emulator' : 'online');
 const actions = new Map();
+const STICK_TRAVEL = 0.31;
 let player = null;
 let joining = false;
 let keys = NEUTRAL;
 let mode = 'touch';
 let steer = 0;
+let touchSteer = 0;
+let steeringPointer = null;
 let center = null;
 let rawTilt = null;
 let rotation = null;
@@ -27,6 +30,12 @@ function text(node, value) {
 function clearControls() {
   keys = NEUTRAL;
   steer = 0;
+  const pointer = steeringPointer;
+  steeringPointer = null;
+  touchSteer = 0;
+  if (pointer !== null && ui.joystick.hasPointerCapture(pointer)) {
+    ui.joystick.releasePointerCapture(pointer);
+  }
   for (const pointers of actions.values()) pointers.clear();
 }
 
@@ -34,12 +43,13 @@ function setMode(next, note) {
   mode = next;
   ui.touch.setAttribute('aria-pressed', String(next === 'touch'));
   ui.tilt.setAttribute('aria-pressed', String(next !== 'touch'));
-  ui['touch-row'].hidden = next !== 'touch';
+  ui.joystick.hidden = next !== 'touch';
+  ui['tilt-controls'].hidden = next === 'touch';
   ui.calibrate.hidden = next !== 'tilt';
   text(ui['mode-note'], note);
 }
 
-function useTouch(note = 'Tahan tombol panah untuk belok.') {
+function useTouch(note = 'Geser joystick untuk belok. Tahan rem sampai mobil berhenti untuk mundur.') {
   tiltAttempt++;
   clearTimeout(tiltTimer);
   clearControls();
@@ -49,7 +59,7 @@ function useTouch(note = 'Tahan tombol panah untuk belok.') {
 
 async function enableTilt() {
   if (!isSecureContext || !window.DeviceOrientationEvent) {
-    useTouch('Sensor memerlukan HTTPS dan HP yang mendukung. Gunakan tombol sentuh.');
+    useTouch('Sensor memerlukan HTTPS dan HP yang mendukung. Joystick sentuh aktif.');
     return;
   }
   const attempt = ++tiltAttempt;
@@ -61,16 +71,16 @@ async function enableTilt() {
   try {
     if (typeof DeviceOrientationEvent.requestPermission === 'function' &&
         await DeviceOrientationEvent.requestPermission() !== 'granted') {
-      if (attempt === tiltAttempt) useTouch('Izin sensor ditolak. Tombol sentuh aktif.');
+      if (attempt === tiltAttempt) useTouch('Izin sensor ditolak. Joystick sentuh aktif.');
       return;
     }
   } catch {
-    if (attempt === tiltAttempt) useTouch('Sensor tidak dapat diaktifkan. Tombol sentuh aktif.');
+    if (attempt === tiltAttempt) useTouch('Sensor tidak dapat diaktifkan. Joystick sentuh aktif.');
     return;
   }
   if (attempt === tiltAttempt && mode === 'waiting') {
     clearTimeout(tiltTimer);
-    tiltTimer = setTimeout(() => useTouch('Sensor belum mengirim data. Tombol sentuh aktif.'), 2200);
+    tiltTimer = setTimeout(() => useTouch('Sensor belum mengirim data. Joystick sentuh aktif.'), 2200);
   }
 }
 
@@ -90,14 +100,22 @@ function orientation(event) {
   steer += (target - steer) * 0.34;
   if (mode === 'waiting') {
     clearTimeout(tiltTimer);
-    setMode('tilt', 'Miringkan HP kiri atau kanan. Gas dan rem tetap di layar.');
+    setMode('tilt', 'Miringkan HP untuk belok. Tahan rem sampai mobil berhenti untuk mundur.');
   }
+}
+
+function moveJoystick(event) {
+  if (event.pointerId !== steeringPointer) return;
+  const { left, width } = ui.joystick.getBoundingClientRect();
+  const offset = (event.clientX - left - width / 2) / (width * STICK_TRAVEL);
+  const deadZone = 0.08;
+  touchSteer = Math.sign(offset) * clamp((Math.abs(offset) - deadZone) / (1 - deadZone), 0, 1);
+  updateController();
 }
 
 function driveInput() {
   if (document.hidden || !document.hasFocus()) return NEUTRAL;
   const pressed = action => actions.get(action).size > 0;
-  const touchSteer = Number(pressed('right')) - Number(pressed('left'));
   const turn = mode === 'tilt' ? steer : touchSteer;
   return {
     steer: Math.round(clamp(turn + keys.steer, -1, 1) * 100) / 100,
@@ -211,7 +229,7 @@ function updateController() {
     return;
   }
   if (mode === 'tilt' && !document.hidden && performance.now() - lastSample > 2000) {
-    useTouch('Data sensor terhenti. Tombol sentuh aktif.');
+    useTouch('Data sensor terhenti. Joystick sentuh aktif.');
   }
   const phase = racePhase(meta, now);
   const online = api.connected();
@@ -227,10 +245,10 @@ function updateController() {
 
   const input = driveInput();
   ui.wheel.style.setProperty('--steer', input.steer * 47 + 'deg');
+  ui.joystick.style.setProperty('--stick-position', (0.5 + input.steer * STICK_TRAVEL) * 100 + '%');
+  ui.joystick.dataset.pressed = String(steeringPointer !== null);
   ui.gas.dataset.pressed = String(input.gas > 0);
   ui.brake.dataset.pressed = String(input.brake > 0);
-  ui.left.dataset.pressed = String(input.steer < 0);
-  ui.right.dataset.pressed = String(input.steer > 0);
   void sendInput(current, now, phase, phase === 'racing' && now < meta.endsAt ? input : NEUTRAL);
 }
 
@@ -258,7 +276,25 @@ async function leaveRoom() {
   }
 }
 
-for (const action of ['left', 'right', 'gas', 'brake']) {
+ui.joystick.addEventListener('pointerdown', event => {
+  if (event.button !== 0 || steeringPointer !== null || mode !== 'touch') return;
+  event.preventDefault();
+  ui.joystick.setPointerCapture(event.pointerId);
+  steeringPointer = event.pointerId;
+  moveJoystick(event);
+});
+ui.joystick.addEventListener('pointermove', moveJoystick);
+for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+  ui.joystick.addEventListener(type, event => {
+    if (event.pointerId !== steeringPointer) return;
+    steeringPointer = null;
+    touchSteer = 0;
+    updateController();
+  });
+}
+ui.joystick.addEventListener('contextmenu', event => event.preventDefault());
+
+for (const action of ['gas', 'brake']) {
   const button = ui[action];
   const pointers = new Set();
   actions.set(action, pointers);

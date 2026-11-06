@@ -19,28 +19,56 @@ form .button { margin-top: 9px; min-height: 51px; }
 .switch { display: inline-flex; gap: 2px; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); padding: 3px; }
 .switch button { min-width: 66px; min-height: 34px; padding: 5px 8px; border: 0; border-radius: 4px; background: none; color: var(--muted); font-weight: 750; font-size: .82rem; }
 .switch [aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.drive-deck {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch;
+  gap: clamp(9px, 3vw, 23px); padding: clamp(8px, 3vw, 16px);
+  border: 1px solid var(--line); border-radius: 10px; background: #191f1b;
+}
+.steering, .pedals { display: grid; gap: 8px; }
+.steering { grid-template-rows: auto 1fr; align-items: center; justify-items: center; }
+.pedals { grid-template-rows: auto 1fr 1fr; text-align: center; }
+.joystick {
+  position: relative; display: flex; justify-content: space-between; align-items: center;
+  width: min(100%, 172px); aspect-ratio: 1; overflow: hidden;
+  padding: 0 8%; border: 2px solid #526250; border-radius: 50%;
+  background: radial-gradient(circle, #2e3e2c 0 57%, #243024 58% 72%, #1b241c 73%);
+  color: var(--muted); cursor: grab;
+}
+.joystick, .drive-button { touch-action: none; user-select: none; -webkit-user-select: none; }
+.joystick[data-pressed="true"] { cursor: grabbing; border-color: var(--driver-color); }
+.stick-arrow { font: 900 clamp(1rem, 6vw, 1.7rem)/1 var(--mono); }
+.stick-knob {
+  position: absolute; top: 50%; left: var(--stick-position, 50%);
+  transform: translate(-50%, -50%); display: grid; place-items: center;
+  width: 34%; aspect-ratio: 1; border: 2px solid #f0ffda80; border-radius: 50%;
+  background: var(--driver-color); box-shadow: 0 3px 11px #0009;
+  color: var(--bg); font-size: clamp(.85rem, 4.7vw, 1.38rem); font-weight: 900;
+}
+.tilt-controls { display: grid; justify-items: center; gap: 8px; width: 100%; }
+.tilt-controls .button { max-width: 100%; }
 .wheel {
   display: grid; place-items: center; width: 63px; height: 63px; margin: 0 auto; transform: rotate(var(--steer, 0deg));
   border-radius: 50%; border: 7px solid #53654f; border-top-color: var(--driver-color); background: #242d24;
   color: var(--driver-color); font-size: 1.4rem; font-weight: 900;
 }
 .mode-note { min-height: 1.45em; text-align: center; }
-.control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.pedals { grid-template-columns: 2fr 3fr; }
 .drive-button {
-  min-width: 0; min-height: 62px; border: 1px solid #566751; border-radius: 8px;
-  touch-action: none; user-select: none; -webkit-user-select: none;
-  color: var(--text); background: #293529; font: 900 1.16rem var(--mono); letter-spacing: .1em;
+  min-width: 0; min-height: 57px; padding: 5px; border: 1px solid #566751; border-radius: 8px;
+  color: var(--text); background: #293529; font: 900 clamp(.72rem, 3.1vw, 1rem) var(--mono); letter-spacing: .04em;
 }
-.drive-button.arrow { min-height: 52px; font-size: 1.8rem; line-height: 1; }
 .drive-button.gas { border-color: #b6d740; background: var(--accent); color: #17200e; }
 .drive-button.brake { border-color: #c37f6e; background: #743d34; color: #fff1eb; }
 .drive-button[data-pressed="true"] { filter: brightness(1.22); box-shadow: inset 0 0 0 3px currentColor; }
 .leave { justify-self: center; min-height: 37px; color: var(--muted); }
 @media (max-height: 560px) and (orientation: landscape) {
-  .handset { max-width: 730px; }
-  .topbar { min-height: 49px; }
-  .drive-panel { grid-template-columns: 1fr 1fr; }
-  .driver, .drive-status, .pedals, .leave, .drive-panel > .message { grid-column: span 2; }
-  .steer-header, .wheel, .mode-note, #calibrate, #touch-row { align-self: center; }
+  .handset { max-width: 650px; }
+  .topbar { min-height: 43px; }
+  .drive-panel { grid-template-columns: minmax(0, 1fr) auto; margin-top: 7px; gap: 5px 10px; }
+  .driver { grid-area: 1 / 1; }
+  .steer-header { grid-area: 1 / 2; }
+  .drive-status { grid-area: 2 / 1 / 3 / -1; }
+  .drive-deck, .mode-note, .drive-panel > .message, .leave { grid-column: 1 / -1; }
+  .drive-deck { padding: 8px 12px; }
+  .joystick { max-width: 128px; }
+  .drive-button { min-height: 46px; }
 }

@@ -64,10 +64,39 @@ test('gas, setir, rem, dan netral memengaruhi mobil', () => {
   const speed = car.speed;
   stepRace(race, { s0: NEUTRAL }, 1 / 60, 525);
   assert.ok(car.speed < speed);
-  for (let i = 0; i < 35; i++) stepRace(race, { s0: { steer: 0, gas: 0, brake: 1 } }, 1 / 60, 550 + i * 17);
+  for (let i = 0; i < 35 && car.speed > 0; i++) {
+    stepRace(race, { s0: { steer: 0, gas: 0, brake: 1 } }, 1 / 60, 550 + i * 17);
+  }
   assert.equal(car.speed, 0);
   assert.ok(nearestTrack(car.x, car.y).gap <= 68.01);
   assert.deepEqual(raceResult(race), { winner: -1, times: { s0: 0 } });
+});
+
+test('pedal rem membuat mobil berhenti sebelum mundur, dan gas membalik arah lewat nol', () => {
+  const race = createRace([{ seat: 's0', name: 'Uji' }]);
+  const car = race.cars[0];
+  let elapsed = 0;
+  const advance = input => stepRace(race, { s0: input }, 1 / 60, elapsed += 1000 / 60);
+  const gas = { steer: 0, gas: 1, brake: 0 };
+  const brake = { steer: 0, gas: 0, brake: 1 };
+  for (let i = 0; i < 26; i++) advance(gas);
+  const forwardProgress = car.progress;
+  assert.ok(car.speed > 0);
+  for (let i = 0; i < 50 && car.speed > 0; i++) advance(brake);
+  assert.equal(car.speed, 0);
+  assert.ok(car.progress > forwardProgress);
+  const stoppedProgress = car.progress;
+  for (let i = 0; i < 18; i++) advance(brake);
+  assert.ok(car.speed < 0);
+  assert.ok(car.progress < stoppedProgress);
+  assert.equal(car.lap, 0);
+  const reverseSpeed = car.speed;
+  advance(NEUTRAL);
+  assert.ok(car.speed > reverseSpeed && car.speed < 0);
+  for (let i = 0; i < 50 && car.speed < 0; i++) advance(gas);
+  assert.equal(car.speed, 0);
+  advance(gas);
+  assert.ok(car.speed > 0);
 });
 
 test('memotong lintasan dan berputar mundur tidak menambah putaran', () => {

@@ -6,7 +6,7 @@ Balap top-down untuk videotron. Satu browser menampilkan lintasan Neon Loop. Sat
 
 1. Ekstrak ZIP dan buka terminal di folder yang berisi `index.html`.
 2. Jalankan `python -m http.server 8080 --bind 127.0.0.1`. Di Windows, gunakan `py` jika perintah `python` tidak tersedia.
-3. Buka [http://127.0.0.1:8080/](http://127.0.0.1:8080/) dan pilih **Coba latihan**. Pakai **WASD** atau **tombol panah** untuk melawan tiga bot. **Spasi** juga bisa dipakai sebagai rem ketika fokus berada di luar tombol atau tautan.
+3. Buka [http://127.0.0.1:8080/](http://127.0.0.1:8080/) dan pilih **Coba latihan**. Pakai **WASD** atau **tombol panah** untuk melawan tiga bot. Tahan **S** atau **↓** untuk mengerem, lalu mundur setelah mobil berhenti. **Spasi** juga bisa dipakai ketika fokus berada di luar tombol atau tautan.
 
 Latihan bekerja tanpa konfigurasi Firebase dan tanpa koneksi internet. Sajikan file lewat HTTP atau HTTPS agar browser bisa memuat modul JavaScript.
 
@@ -32,7 +32,7 @@ Proyek ini memakai HTML, CSS, dan JavaScript sebagai file statis. GitHub Pages d
 
 1. Buka situs HTTPS di komputer yang tersambung ke videotron. Pilih **Layar penuh**, lalu **Buat lobby**.
 2. Peserta scan QR dengan kamera HP, masukkan nama, lalu pilih **Gabung balapan**. Alternatifnya, host bisa menyalin link undangan. Kode dari layar juga bisa dimasukkan di `controller.html`.
-3. Di HP, pilih **Tilt** dan izinkan akses sensor bila diminta. Pegang HP pada posisi setir tengah saat sensor mulai terbaca. Jika setir menarik ke satu sisi, ketuk **Kalibrasi posisi tengah**. **Gas** dan **Rem** selalu memakai tombol layar. Jika sensor tidak mengirim data atau izin ditolak, controller kembali ke mode **Sentuh** dengan panah kiri dan kanan.
+3. Di HP, mode **Sentuh** menempatkan joystick analog di kiri dan pedal **Gas** serta **Rem / Mundur** di kanan. Geser joystick sedikit untuk belok halus. Tahan **Rem / Mundur** hingga mobil berhenti, lalu terus tahan untuk mundur. Untuk setir sensor, pilih **Tilt**, pegang HP pada posisi setir tengah, dan izinkan akses bila diminta. Gunakan **Kalibrasi setir** jika perlu. Joystick muncul kembali bila sensor gagal atau izin ditolak.
 4. Tunggu indikator **SIAP** di layar host, lalu pilih **Mulai balapan**. Host bisa memulai dengan minimal satu controller yang siap. Slot terkunci sampai ronde selesai.
 5. Setelah podium, pilih **Balapan lagi** untuk membuka lobby dengan pemain yang sama. Host bisa melepas slot terputus melalui **×** saat lobby terbuka. Gunakan **Tutup lobby** setelah acara.
 
@@ -68,7 +68,7 @@ Tes aturan membuat identitas anonim di emulator dan memeriksa klaim slot serenta
 
 1. Dengan emulator dan server lokal aktif, buka `http://127.0.0.1:8080/?emulator=1`. Parameter emulator hanya diterima di loopback. Browser tetap memerlukan internet untuk memuat SDK Firebase dari CDN saat uji online.
 2. Buat lobby. Buka link undangan di empat sesi browser terpisah, isi nama, lalu cek bahwa layar host menampilkan **4 siap**. Coba pemain kelima.
-3. Mulai balapan. Di controller desktop, tombol **WASD** dan **panah** juga dapat dipakai. Coba tahan gas dan belok bersamaan, lepas tombol, muat ulang satu controller, dan cek hasil serta ronde ulang.
+3. Mulai balapan. Coba tahan gas sambil menggeser joystick, lalu lepas joystick dan lihat setir kembali ke tengah. Tahan **Rem / Mundur** saat maju dan pastikan mobil berhenti sebelum mundur. Di controller desktop, tombol **WASD** dan **panah** juga dapat dipakai. Muat ulang satu controller, lalu cek hasil serta ronde ulang.
 4. Di URL Pages, ulangi dengan HP asli. Coba scan QR dari jarak penonton, izin tilt di Safari iOS dan Chrome Android yang akan digunakan, kalibrasi, dan mode sentuh. Saat uji dengan lebih dari satu perangkat, cek juga respons lewat jaringan tempat acara.
 
 ## Struktur dan akses
